@@ -1,0 +1,72 @@
+version: "3.7"
+services:  
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - 8888:80
+    volumes:
+      - .:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - laravel
+
+  mysql: 
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: homestead
+      MYSQL_USER: homestead
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: admin.root
+      TZ: America/Mexico_City
+    ports:
+      - 33069:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - laravel
+
+  php:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: server_netsky
+    restart: always
+    ports:
+      - 9000:80      
+    volumes:
+      - .:/var/www/html  
+    networks:
+      - laravel
+networks:
+  laravel:
+    
+
+
+# version: '3.8'
+# services:
+#   php:
+#     build: 
+#       context: ./
+#       dockerfile: dockerfile
+#     working_dir: /var/www/html/public
+#     container_name: laravel_asf
+#     restart: always
+#     ports:
+#       - 8000:80
+#     volumes:
+#       - .:/var/www/html
+  
+      # config
+      # apache vhost
+  # composer:
+  #   image: composer
+  #   volumes: 
+  #     - .:/var/www/html
+  #   working_dir: /var/www/html
